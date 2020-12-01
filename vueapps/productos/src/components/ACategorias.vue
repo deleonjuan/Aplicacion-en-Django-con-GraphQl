@@ -2,7 +2,6 @@
     <div>
        <div class="form-group mt-4">
                 <label class="form-check-label mr-2 ml-3" for="inlineCheckbox3">Nueva Categoria:</label>
-                </br>
                 <input type="text" class="form-control ml-3 m-2" id="name" placeholder="nueva categoria" v-model="categoria">
         </div>
         <div class="form-group">
