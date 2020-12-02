@@ -36,7 +36,24 @@ const GetComercials = async () => {
         return res.data.data.allComercials.edges
     }
 }
-
+const GetCategorias = async () => {
+    const res = await GET({
+        query: `
+        {
+            allTitles {
+              edges {
+                node {
+            id
+               titleName
+                }
+              }
+            }
+          }`
+    })
+    if (!res.Err) {
+        return res.data.data.allTitles.edges
+    }
+}
 const GetProductos = async () => {
     const res = await GET({
         query: `
@@ -87,8 +104,60 @@ const GetProductosX = async (comercial) => {
     }
 }
 
+const PostCategoria = async (nombre) => {
+    const res = await GET({
+        query: `
+        mutation{
+            createTitle(input:{
+                    titleName:"${nombre}"
+                })
+                {
+                    title{
+                      id
+                      titleName
+                    }
+                }
+          }`
+    })
+    if (!res.Err) {
+        return true
+    }
+}
+
+const PostProducto = async (nombre, categoria, comercial) => {
+    const res = await GET({
+        query: `
+        mutation {
+            createProductos(input: {
+                productosName: "${nombre}",
+                productosComercial: "${categoria}",
+                productosTitle: "${comercial}"
+              }) {
+                productos{
+                  id
+                  productosName
+                  productosTitle{
+                    titleName
+                  }
+                  productosComercial{
+                    comercialName
+                  }
+                }
+              }
+            }`
+    })
+    if (!res.Err) {
+        return true
+    }
+}
+
 export {
     GetComercials,
     GetProductos,
-    GetProductosX
+    GetProductosX,
+    PostCategoria,
+    GetCategorias,
+    PostProducto
 }
+
+

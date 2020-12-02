@@ -9,17 +9,25 @@
         </div>
       </div>
     </div>
+
+    
+    
   </div>
 </template>
 
 <script>
 import { GetComercials } from "../service/functions";
+
+
 export default {
   name: "HomeScreen",
   data() {
     return {
       comerciales: [],
     };
+  },
+  components: {
+    // AgregarComercial,
   },
   async mounted() {
     const centros_comerciales = await GetComercials();

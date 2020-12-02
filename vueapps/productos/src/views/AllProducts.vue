@@ -2,6 +2,24 @@
   <div id="AllProducts">
     <div class="container">
       <h2>Todos los productos</h2>
+      <button
+        type="button"
+        class="btn btn-outline-primary mb-5"
+        data-toggle="modal"
+        data-target="#nuevaCategoriaModal"
+      >
+        Agregar categoria
+      </button>
+      <!--  -->
+      <button
+        type="button"
+        class="btn btn-outline-primary mb-5"
+        data-toggle="modal"
+        data-target="#nuevoProductolModal"
+      >
+        Agregar producto
+      </button>
+      <!--  -->
       <!-- productos por centro comercial -->
       <div v-for="i in productos" :key="i.id">
         <div class="card">
@@ -21,12 +39,21 @@
         </div>
       </div>
       <!--  -->
+      <!-- modal para agregar un nuevo supermercado -->
+      <AgregarCategoria />
+      <AgregarProducto/>
+
+      <!--  -->
     </div>
   </div>
 </template>
 
 <script>
 import { GetProductos } from "../service/functions";
+//componentes
+import AgregarCategoria from '../components/AddNewCategoria'
+import AgregarProducto from '../components/addNewProduct'
+
 export default {
   name: "AllProductsScreen",
   data() {
@@ -34,6 +61,10 @@ export default {
       productos: [],
       comercial: "Productos",
     };
+  },
+  components: {
+    AgregarCategoria,
+    AgregarProducto,
   },
   async mounted() {
     const productos = await GetProductos();
