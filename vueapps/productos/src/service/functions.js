@@ -13,11 +13,11 @@ const GET = async (data) => {
         return { Err: false, data: res.data }
 
     } catch (e) {
-        console.log(err);
+        console.log(e);
         return { Err: true }
     }
 }
-
+//supermercados
 const GetComercials = async () => {
     const res = await GET({
         query: `
@@ -36,6 +36,7 @@ const GetComercials = async () => {
         return res.data.data.allComercials.edges
     }
 }
+//categorias
 const GetCategorias = async () => {
     const res = await GET({
         query: `
@@ -54,6 +55,26 @@ const GetCategorias = async () => {
         return res.data.data.allTitles.edges
     }
 }
+const PostCategoria = async (nombre) => {
+    const res = await GET({
+        query: `
+        mutation{
+            createTitle(input:{
+                    titleName:"${nombre}"
+                })
+                {
+                    title{
+                      id
+                      titleName
+                    }
+                }
+          }`
+    })
+    if (!res.Err) {
+        return true
+    }
+}
+//productos
 const GetProductos = async () => {
     const res = await GET({
         query: `
@@ -78,7 +99,6 @@ const GetProductos = async () => {
         return res.data.data.allProductoss.edges
     }
 }
-
 const GetProductosX = async (comercial) => {
     const res = await GET({
         query: `
@@ -103,27 +123,6 @@ const GetProductosX = async (comercial) => {
         return res.data.data.allProductoss.edges
     }
 }
-
-const PostCategoria = async (nombre) => {
-    const res = await GET({
-        query: `
-        mutation{
-            createTitle(input:{
-                    titleName:"${nombre}"
-                })
-                {
-                    title{
-                      id
-                      titleName
-                    }
-                }
-          }`
-    })
-    if (!res.Err) {
-        return true
-    }
-}
-
 const PostProducto = async (nombre, categoria, comercial) => {
     const res = await GET({
         query: `
@@ -150,11 +149,70 @@ const PostProducto = async (nombre, categoria, comercial) => {
         return true
     }
 }
+const DeleteProducto = async (id) => {
+    const res = await GET({
+        query: `
+        mutation {
+            deleteProductos(input: {
+              id: "${id}"
+            }) {
+              productos{
+                id
+                productosName
+                productosTitle{
+                  titleName
+                }
+                productosComercial{
+                  comercialName
+                }
+              }
+            }
+          }
+        `
+    })
+    if (!res.Err) {
+        return true
+    }
+}
+const UpdateProducto = async (id, nombre, categoria, comercial) => {
+    const res = await GET({
+        query: `
+        mutation {
+          updateProductos(input: {
+                id: "${id}",
+                productosName: "${nombre}",
+                productosComercial: "${categoria}",
+                productosTitle: "${comercial}"
+            }) {
+                productos{
+                    id
+                    productosName
+                    productosTitle{
+                        titleName
+                    }
+                    productosComercial{
+                    comercialName
+                    }
+                }
+            }
+        }
+        `
+    })
+    if (!res.Err) {
+        return true
+    }
+}
+
 
 export {
+    //
     GetComercials,
+    //
     GetProductos,
     GetProductosX,
+    DeleteProducto,
+    UpdateProducto,
+    //
     PostCategoria,
     GetCategorias,
     PostProducto

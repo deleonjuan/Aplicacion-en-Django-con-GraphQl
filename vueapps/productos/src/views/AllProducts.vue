@@ -14,14 +14,13 @@
       <button
         type="button"
         class="btn btn-outline-primary mb-5"
-        data-toggle="modal"
-        data-target="#nuevoProductolModal"
+        @click="ShowModal()"
       >
         Agregar producto
       </button>
       <!--  -->
       <!-- productos por centro comercial -->
-      <div v-for="i in productos" :key="i.id">
+      <div v-for="i in productos" :key="i.node.id">
         <div class="card">
           <div class="row card-body">
             <div class="col-sm">{{ i.node.productosName }}</div>
@@ -33,6 +32,18 @@
                 <span class="badge badge-secondary"
                   >{{ i.node.productosTitle.titleName }}
                 </span>
+                <span class="badge badge-danger" @click="Eliminar(i.node.id)"
+                  >Eliminar</span
+                >
+                <span class="badge badge-warning" 
+                @click="Editar(
+                  i.node.id,
+                  i.node.productosName,
+                  i.node.productosComercial.comercialName,
+                  i.node.productosTitle.titleName,
+                )"
+                  >Editar</span
+                >
               </h5>
             </div>
           </div>
@@ -41,7 +52,7 @@
       <!--  -->
       <!-- modal para agregar un nuevo supermercado -->
       <AgregarCategoria />
-      <AgregarProducto/>
+      <AgregarProducto />
 
       <!--  -->
     </div>
@@ -49,10 +60,10 @@
 </template>
 
 <script>
-import { GetProductos } from "../service/functions";
+import { GetProductos, DeleteProducto } from "../service/functions";
 //componentes
-import AgregarCategoria from '../components/AddNewCategoria'
-import AgregarProducto from '../components/addNewProduct'
+import AgregarCategoria from "../components/AddNewCategoria";
+import AgregarProducto from "../components/addNewProduct";
 
 export default {
   name: "AllProductsScreen",
@@ -65,6 +76,23 @@ export default {
   components: {
     AgregarCategoria,
     AgregarProducto,
+  },
+  methods: {
+    async Eliminar(id) {
+      const res = await DeleteProducto(id);
+      if (res) window.location.reload();
+    },
+    async ShowModal(){
+      $('#nuevoProductolModal').modal('show')
+      $('#nuevoProductolModal').data("id", -1)
+    },
+    async Editar(id, nombre, comercial, categoria){
+      $('#nuevoProductolModal').modal('show')
+      $('#nuevoProductolModal').data("id", id)
+      $('#nuevoProductolModal').data("nombre", nombre)
+      $('#nuevoProductolModal').data("comercial", comercial)
+      $('#nuevoProductolModal').data("categoria", categoria)
+    }
   },
   async mounted() {
     const productos = await GetProductos();

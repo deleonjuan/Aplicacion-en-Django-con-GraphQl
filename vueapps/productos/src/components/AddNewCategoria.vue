@@ -5,7 +5,7 @@
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
-    data-backdrop="static" 
+    data-backdrop="static"
     data-keyboard="false"
   >
     <div class="modal-dialog">
@@ -17,17 +17,24 @@
           <!-- formulario  -->
           <form>
             <div class="form-group">
-              <label for="recipient-name" class="col-form-label"
-                >Nombre:</label
-              >
-              <input type="text" v-model="nombre" class="form-control" id="recipient-name" />
+              <label for="recipient-name" class="col-form-label">Nombre:</label>
+              <input
+                type="text"
+                v-model="nombre"
+                class="form-control"
+                id="recipient-name"
+              />
             </div>
           </form>
           <!--  -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" @click="guardar()">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary" @click="guardar()">
+            Guardar
+          </button>
         </div>
       </div>
     </div>
@@ -44,10 +51,13 @@ export default {
     };
   },
   methods: {
-      async guardar(){
-          const res = await PostCategoria(this.nombre)
-          if(res) window.location.reload()
+    async guardar() {
+      // $('#nuevaCategoriaModal').modal('hide');
+      const res = await PostCategoria(this.nombre);
+      if (res) {
+        window.location.reload();
       }
+    },
   },
 };
 </script>

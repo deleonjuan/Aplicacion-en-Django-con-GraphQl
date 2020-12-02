@@ -3,21 +3,22 @@
     <div class="container">
       <h2>Supermercados</h2>
       <!-- imprimir los nombres de los centros comerciales -->
-      <div v-for="i in comerciales" :key="i.id">
-        <div class="card comercial" @click="navegar(i.node.comercialName)">
-          <div class="card-body">{{ i.node.comercialName }}</div>
-        </div>
-      </div>
+      <ul class="list-group comercial">
+        <li
+          class="list-group-item list-group-item-action"
+          v-for="i in comerciales"
+          :key="i.id"
+          @click="navegar(i.node.comercialName)"
+        >
+          {{ i.node.comercialName }}
+        </li>
+      </ul>
     </div>
-
-    
-    
   </div>
 </template>
 
 <script>
 import { GetComercials } from "../service/functions";
-
 
 export default {
   name: "HomeScreen",

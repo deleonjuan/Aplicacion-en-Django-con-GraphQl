@@ -11,7 +11,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Nuevo producto</h5>
+          <h5 class="modal-title" v-if="!isEditing" id="exampleModalLabel">Nuevo producto</h5>
+          <h5 class="modal-title" v-if="isEditing" id="exampleModalLabel">Actualizar producto</h5>
         </div>
         <div class="modal-body">
           <!-- formulario  -->
@@ -22,19 +23,31 @@
                 type="text"
                 v-model="nombre"
                 class="form-control"
-                id="recipient-name"
+                id="nombre-producto"
               />
             </div>
             <div class="form-group">
               <label for="exampleFormControlSelect1">Elegir categoria</label>
-              <select class="form-control" id="exampleFormControlSelect1" v-model="categoria">
-                <option v-for="i in categorias" :key="i.id">{{ i.node.titleName }}</option>
+              <select
+                class="form-control"
+                id="exampleFormControlSelect1"
+                v-model="categoria"
+              >
+                <option v-for="i in categorias" :key="i.id">
+                  {{ i.node.titleName }}
+                </option>
               </select>
             </div>
             <div class="form-group">
               <label for="exampleFormControlSelect1">Elegir supermercado</label>
-              <select class="form-control" id="exampleFormControlSelect1" v-model="comercial">
-                <option v-for="i in comerciales" :key="i.id">{{ i.node.comercialName }}</option>
+              <select
+                class="form-control"
+                id="exampleFormControlSelect1"
+                v-model="comercial"
+              >
+                <option v-for="i in comerciales" :key="i.id">
+                  {{ i.node.comercialName }}
+                </option>
               </select>
             </div>
           </form>
@@ -54,29 +67,83 @@
 </template>
 
 <script>
-import { PostProducto, GetComercials, GetCategorias } from "../service/functions";
+import {
+  PostProducto,
+  UpdateProducto,
+  GetComercials,
+  GetCategorias,
+} from "../service/functions";
 export default {
   name: "AgregarProducto",
   data() {
     return {
-      nombre: '',
-      comercial: '',
-      categoria: '',
+      isEditing: false,
+      id: 0,
+      nombre: "",
+      comercial: "",
+      categoria: "",
       comerciales: [],
-      categorias: []
+      categorias: [],
     };
   },
   async mounted() {
+    // obtener datos
+    $("#nuevoProductolModal").on("shown.bs.modal", function (e) {
+      const id = $(this).data("id");
+      if (id !== -1) {
+        actualizar_datos(
+          id,
+          $(this).data("nombre"),
+          $(this).data("comercial"),
+          $(this).data("categoria")
+        );
+      } else {
+        isNotEditing()
+      }
+    });
+
+    const isNotEditing = () => {
+      this.isEditing = false
+      this.id = '';
+      this.nombre = '';
+      this.comercial = '';
+      this.categoria = '';
+    }
+
+    const actualizar_datos = (id, nombre, comercial, categoria) => {
+      this.id = id;
+      this.nombre = nombre;
+      this.comercial = comercial;
+      this.categoria = categoria;
+      this.isEditing = true;
+    };
+
+    //cargar los centros comerciales
     const centros_comerciales = await GetComercials();
     this.comerciales = centros_comerciales;
 
+    //cargar las categorias
     const categorias = await GetCategorias();
     this.categorias = categorias;
   },
   methods: {
     async guardar() {
-        const res = await PostProducto(this.nombre, this.comercial, this.categoria)
-        if(res) window.location.reload()
+      if (this.isEditing) {
+        const res = await UpdateProducto(
+          this.id,
+          this.nombre,
+          this.comercial,
+          this.categoria
+        );
+        if (res) window.location.reload();
+      } else {
+        const res = await PostProducto(
+          this.nombre,
+          this.comercial,
+          this.categoria
+        );
+        if (res) window.location.reload();
+      }
     },
   },
 };
