@@ -126,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+urlpatterns += patterns(", (r’^static/(?P.*)$’, ‘django.views.static.serve’, {‘document_root’: settings.STATIC_ROOT}),)
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080'
