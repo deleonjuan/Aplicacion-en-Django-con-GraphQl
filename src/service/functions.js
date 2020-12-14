@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const SERVER = 'http://127.0.0.1:8000/graphql/'
+//const SERVER = 'http://127.0.0.1:8000/graphql/'
+const SERVER = 'https://progracomercialfinal.herokuapp.com/graphql'
 
 const GET = async (data) => {
   try {
